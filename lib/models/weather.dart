@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
 class Weather extends Equatable {
@@ -9,9 +8,9 @@ class Weather extends Equatable {
   final double tempMax;
   final String name;
   final String country;
-  final DateTime lastUpdate;
+  final DateTime lastUpdated;
 
-  Weather({
+  const Weather({
     required this.description,
     required this.icon,
     required this.temp,
@@ -19,7 +18,7 @@ class Weather extends Equatable {
     required this.tempMax,
     required this.name,
     required this.country,
-    required this.lastUpdate,
+    required this.lastUpdated,
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) {
@@ -27,14 +26,14 @@ class Weather extends Equatable {
     final main = json['main'];
 
     return Weather(
-      description: weather['description'],
-      icon: weather['icon'],
-      temp: main['temp'],
-      tempMin: main['temp_min'],
-      tempMax: main['temp_max'],
+      description: weather['description'] ?? '',
+      icon: weather['icon'] ?? '',
+      temp: main['temp']?.toDouble() ?? 0.0,
+      tempMin: main['temp_min']?.toDouble() ?? 0.0,
+      tempMax: main['temp_max']?.toDouble() ?? 0.0,
       name: '',
       country: '',
-      lastUpdate: DateTime.now(),
+      lastUpdated: DateTime.now(),
     );
   }
 
@@ -46,7 +45,7 @@ class Weather extends Equatable {
         tempMax: 100.0,
         name: '',
         country: '',
-        lastUpdate: DateTime(1970),
+        lastUpdated: DateTime(1970),
       );
 
   @override
@@ -59,12 +58,14 @@ class Weather extends Equatable {
       tempMax,
       name,
       country,
-      lastUpdate,
+      lastUpdated,
     ];
   }
 
   @override
-  bool get stringify => true;
+  String toString() {
+    return 'Weather(description: $description, icon: $icon, temp: $temp, tempMin: $tempMin, tempMax: $tempMax, name: $name, country: $country, lastUpdated: $lastUpdated)';
+  }
 
   Weather copyWith({
     String? description,
@@ -74,7 +75,7 @@ class Weather extends Equatable {
     double? tempMax,
     String? name,
     String? country,
-    DateTime? lastUpdate,
+    DateTime? lastUpdated,
   }) {
     return Weather(
       description: description ?? this.description,
@@ -84,7 +85,7 @@ class Weather extends Equatable {
       tempMax: tempMax ?? this.tempMax,
       name: name ?? this.name,
       country: country ?? this.country,
-      lastUpdate: lastUpdate ?? this.lastUpdate,
+      lastUpdated: lastUpdated ?? this.lastUpdated,
     );
   }
 }

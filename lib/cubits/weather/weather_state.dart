@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'weather_cubit.dart';
 
 enum WeatherStatus {
@@ -9,11 +8,7 @@ enum WeatherStatus {
 }
 
 class WeatherState extends Equatable {
-  final WeatherStatus status;
-  final Weather weather;
-  final CustomError error;
-
-  WeatherState({
+  const WeatherState({
     required this.status,
     required this.weather,
     required this.error,
@@ -23,15 +18,19 @@ class WeatherState extends Equatable {
     return WeatherState(
       status: WeatherStatus.initial,
       weather: Weather.initial(),
-      error: CustomError(),
+      error: const CustomError(),
     );
   }
+
+  final WeatherStatus status;
+  final Weather weather;
+  final CustomError error;
 
   @override
   List<Object> get props => [status, weather, error];
 
   @override
-  bool get stringify => true;
+  String toString() => 'WeatherState(status: $status, weather: $weather, error: $error)';
 
   WeatherState copyWith({
     WeatherStatus? status,
