@@ -14,12 +14,8 @@ class WeatherRepository {
       final DirectGeocoding directGeocoding =
           await weatherApiService.getDirectGeocoding(city);
 
-      print('directGeocoding: $directGeocoding');
-
       final Weather tempWeather =
           await weatherApiService.getWeather(directGeocoding);
-
-      print('Weather: $tempWeather');
 
       final Weather weather = tempWeather.copyWith(
           name: directGeocoding.name, country: directGeocoding.country);
