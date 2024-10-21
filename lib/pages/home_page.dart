@@ -3,8 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recase/recase.dart';
 
 import '../constants/constants.dart';
-import '../cubits/temp_settings/temp_settings_cubit.dart';
-import '../cubits/weather/weather_cubit.dart';
+import '../blocs/blocs.dart';
 import '../widgets/error_dialog.dart';
 import 'search_page.dart';
 import 'settings_page.dart';
@@ -28,7 +27,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             onPressed: () async {
               // to avoid async gap warning
-              final weatherCubit = context.read<WeatherCubit>();
+              final weatherBloc = context.read<WeatherBloc>();
 
               _city = await Navigator.push(
                 context,
@@ -38,7 +37,7 @@ class _HomePageState extends State<HomePage> {
               );
               print('city: $_city');
               if (_city != null) {
-                weatherCubit.fetchWeather(_city!);
+                weatherBloc.add(FetchWeatherEvent(city: _city!));
               }
             },
             icon: const Icon(Icons.search),
@@ -61,7 +60,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   String showTemperature(double temperature) {
-    final tempUnit = context.watch<TempSettingsCubit>().state.tempUnit;
+    final tempUnit = context.watch<TempSettingsBloc>().state.tempUnit;
 
     if (tempUnit == TempUnit.fahrenheit) {
       // to avoid prefer_interpolation_to_compose_strings warning
@@ -91,7 +90,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _showWeather() {
-    return BlocConsumer<WeatherCubit, WeatherState>(
+    return BlocConsumer<WeatherBloc, WeatherState>(
       listener: (context, state) {
         if (state.status == WeatherStatus.error) {
           errorDialog(context, state.error.errMsg);

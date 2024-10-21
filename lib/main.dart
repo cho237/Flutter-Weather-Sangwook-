@@ -3,9 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
-import 'cubits/temp_settings/temp_settings_cubit.dart';
-import 'cubits/theme/theme_cubit.dart';
-import 'cubits/weather/weather_cubit.dart';
+import 'blocs/blocs.dart';
 import 'repositories/weather_repository.dart';
 import 'services/weather_api_services.dart';
 import 'pages/home_page.dart';
@@ -28,34 +26,34 @@ class MyApp extends StatelessWidget {
       ),
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<WeatherCubit>(
-            create: (context) => WeatherCubit(
+          BlocProvider<WeatherBloc>(
+            create: (context) => WeatherBloc(
               weatherRepository: context.read<WeatherRepository>(),
             ),
           ),
-          BlocProvider<TempSettingsCubit>(
-            create: (context) => TempSettingsCubit(),
+          BlocProvider<TempSettingsBloc>(
+            create: (context) => TempSettingsBloc(),
           ),
-          BlocProvider<ThemeCubit>(
-            create: (context) => ThemeCubit(),
+          BlocProvider<ThemeBloc>(
+            create: (context) => ThemeBloc(),
           ),
         ],
-        child: BlocBuilder<ThemeCubit, ThemeState>(
-          builder: (context, state) {
-            return BlocListener<WeatherCubit, WeatherState>(
-              listener: (context, state) {
-                context.read<ThemeCubit>().setTheme(state.weather.temp);
-              },
-              child: MaterialApp(
+        child: BlocListener<WeatherBloc, WeatherState>(
+          listener: (context, state) {
+            context.read<ThemeBloc>().setTheme(state.weather.temp);
+          },
+          child: BlocBuilder<ThemeBloc, ThemeState>(
+            builder: (context, state) {
+              return MaterialApp(
                 title: 'Weather App',
                 debugShowCheckedModeBanner: false,
                 theme: state.appTheme == AppTheme.light
                     ? ThemeData.light(useMaterial3: true)
                     : ThemeData.dark(useMaterial3: true),
                 home: const HomePage(),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
